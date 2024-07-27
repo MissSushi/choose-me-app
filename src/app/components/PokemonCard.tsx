@@ -1,4 +1,39 @@
+"use client";
+
+import { useEffect } from "react";
+
 const PokemonCard = () => {
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    function getRandomPokemonId(max: number) {
+      return Math.floor(Math.random() * max) + 1;
+    }
+
+    async function getData() {
+      const id = getRandomPokemonId(1302);
+      const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+
+      try {
+        const response = await fetch(url, { signal: abortController.signal });
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+        const result = await response.json();
+      } catch (error) {
+        if (error instanceof Error) {
+          if (error.name === "AbortError") return;
+          console.error(`Error message: ${error.message}`);
+        }
+      }
+    }
+    getData();
+
+    return () => {
+      abortController.abort();
+    };
+  }, []);
+
   return (
     <>
       <div className="relative bg-neutral-300/80 rounded shadow-lg max-w-3xl mx-auto mb-20">
@@ -11,12 +46,12 @@ const PokemonCard = () => {
             #1
           </div>
         </div>
-        <ul className="flex flex-row justify-center gap-3 md:gap-8 mt-8 rounded text-stone-700 hover:text-stone-600 sm:text-lg sm:font-semibold px-4">
-          <li className="bg-stone-700 text-white rounded-full px-2 py-1">
+        <ul className="flex flex-row justify-center gap-3 md:gap-8 mt-8 rounded text-stone-700 sm:text-lg sm:font-semibold px-4">
+          <li className="bg-stone-700 text-white rounded-full px-2 py-1 hover:text-stone-600">
             Beschreibung
           </li>
-          <li>Fähigkeiten</li>
-          <li>Evolutionen</li>
+          <li className="hover:text-stone-600">Fähigkeiten</li>
+          <li className="hover:text-stone-600">Evolutionen</li>
         </ul>
         <p className="flex justify-center my-4 px-4 pb-4">
           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
