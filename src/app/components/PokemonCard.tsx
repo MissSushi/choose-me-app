@@ -3,13 +3,19 @@
 import { useRef } from "react";
 import { usePokemon } from "../custom-hooks/usePokemon";
 import { TextBubble } from "./TextBubble";
+import { SearchBar } from "./SearchBar";
 import { Button } from "./Button";
 const PokemonCard = () => {
-  const pokemon = usePokemon();
+  const { pokemon, setId } = usePokemon();
   const ref = useRef<HTMLAudioElement>(null);
 
   return (
     <>
+      <SearchBar
+        onIdFound={(id) => {
+          setId(id);
+        }}
+      ></SearchBar>
       <div className="relative bg-neutral-300/80 rounded shadow-lg max-w-3xl mx-auto mb-20">
         <div className="flex flex-col items-center bg-neutral-200 rounded-t">
           <img

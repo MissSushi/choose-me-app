@@ -12,16 +12,16 @@ type Pokemon = {
   cries: string;
 };
 
+function getRandomPokemonId(max: number) {
+  return Math.floor(Math.random() * max) + 1;
+}
+
 const usePokemon = () => {
+  const [id, setId] = useState(getRandomPokemonId(1025));
   const [pokemon, setPokemon] = useState<Pokemon>();
 
   useEffect(() => {
     const abortController = new AbortController();
-
-    function getRandomPokemonId(max: number) {
-      return Math.floor(Math.random() * max) + 1;
-    }
-    const id = getRandomPokemonId(1025);
 
     async function getPokemon() {
       const species = await getPokemonSpeciesData();
@@ -125,9 +125,9 @@ const usePokemon = () => {
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [id]);
 
-  return pokemon;
+  return { pokemon, setId };
 };
 
 export { usePokemon };
