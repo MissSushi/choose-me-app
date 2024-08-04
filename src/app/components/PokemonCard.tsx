@@ -5,9 +5,56 @@ import { usePokemon } from "../custom-hooks/usePokemon";
 import { TextBubble } from "./TextBubble";
 import { SearchBar } from "./SearchBar";
 import { Button } from "./Button";
+
+function determineColors(pokemonColor: string | undefined) {
+  // if (pokemonColor && pokemonColor in colorMap) {
+  //   // @ts-ignore
+  //   return colorMap[pokemonColor]
+  // }
+  return {
+    text: {
+      primary: "text-black",
+      secondary: "text-stone-500",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "bg-neutral-200",
+      secondary: "bg-neutral-300/80",
+      tertiary: "bg-stone-700",
+    },
+  };
+}
+
+// const colorMap = {
+//   black: {
+//     text: {
+//       primary: "text-white",
+//       secondary: "text-neutral-300",
+//       tertiary: "text-stone-500",
+//     },
+//     bg: {
+//       primary: "bg-black",
+//       secondary: "bg-neutral-800",
+//     },
+//   },
+//   blue: {
+//     text: {
+//       primary: "text-white",
+//       secondary: "text-neutral-300",
+//       tertiary: "text-stone-500",
+//     },
+//     bg: {
+//       primary: "bg-black",
+//       secondary: "bg-neutral-800",
+//     },
+//   },
+// };
+
 const PokemonCard = () => {
   const { pokemon, setId } = usePokemon();
   const ref = useRef<HTMLAudioElement>(null);
+
+  const colors = determineColors(pokemon?.color);
 
   return (
     <>
@@ -16,19 +63,71 @@ const PokemonCard = () => {
           setId(id);
         }}
       ></SearchBar>
-      <div className="relative bg-neutral-300/80 rounded shadow-lg max-w-3xl mx-auto mb-20">
-        <div className="flex flex-col items-center bg-neutral-200 rounded-t">
+      <div
+        className={`relative rounded shadow-lg max-w-3xl mx-auto mb-20 ${colors.bg.secondary}`}
+      >
+        <div
+          className={`relative sm:static flex flex-col items-center rounded-t ${colors.bg.primary}`}
+        >
           <img
             src={pokemon?.imageSrc}
             alt={pokemon?.name ?? ""}
             className="w-60 h-60"
           />
+          <div className="flex items-center justify-between absolute inset-0 p-2 pointer-events-none">
+            {/* next pokémon, previous pokémon */}
+            <button
+              onClick={() => setId((id) => Math.max(id - 1, 1))}
+              disabled={pokemon?.id === 1}
+              type="button"
+              className={`size-12 sm:size-10 flex items-center justify-center ${colors.bg.tertiary} ${colors.text.tertiary} rounded-full pointer-events-auto`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 19.5 8.25 12l7.5-7.5"
+                />
+              </svg>
+            </button>
+
+            <button
+              onClick={() => setId((id) => Math.min(id + 1, 1025))}
+              disabled={pokemon?.id === 1025}
+              type="button"
+              className={`size-12 sm:size-10 flex items-center justify-center ${colors.bg.tertiary} ${colors.text.tertiary} rounded-full pointer-events-auto`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </button>
+          </div>
           <div className="flex items-center gap-3">
             <h1 className="flex justify-center text-2xl my-4 font-semibold">
               {pokemon?.name ?? "Lädt..."}
             </h1>
+            {/* Audio Button */}
             <button
-              className=" bg-stone-700 rounded-full p-2 flex items-baseline justify-center text-white"
+              type="button"
+              className={`rounded-full p-2 flex items-baseline justify-center ${colors.bg.tertiary} ${colors.text.tertiary}`}
               onClick={() => {
                 ref.current?.play();
               }}
@@ -37,7 +136,7 @@ const PokemonCard = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className="size-5"
+                className="size-6"
               >
                 <path d="M10.5 3.75a.75.75 0 0 0-1.264-.546L5.203 7H2.667a.75.75 0 0 0-.7.48A6.985 6.985 0 0 0 1.5 10c0 .887.165 1.737.468 2.52.111.29.39.48.7.48h2.535l4.033 3.796a.75.75 0 0 0 1.264-.546V3.75ZM16.45 5.05a.75.75 0 0 0-1.06 1.061 5.5 5.5 0 0 1 0 7.778.75.75 0 0 0 1.06 1.06 7 7 0 0 0 0-9.899Z" />
                 <path d="M14.329 7.172a.75.75 0 0 0-1.061 1.06 2.5 2.5 0 0 1 0 3.536.75.75 0 0 0 1.06 1.06 4 4 0 0 0 0-5.656Z" />
@@ -46,22 +145,26 @@ const PokemonCard = () => {
               <audio ref={ref} src={pokemon?.cries}></audio>
             </button>
           </div>
-          <div className="absolute -right-2 -top-2 bg-stone-700 rounded-full py-2 px-3 flex items-baseline justify-center text-white ">
-            <span className="text-xs text-stone-400">#</span>
+          <div
+            className={`absolute -right-2 -top-2 rounded-full py-2 px-3 flex items-baseline justify-center  ${colors.bg.tertiary} ${colors.text.tertiary}`}
+          >
+            <span className={`text-xs font-semibold ${colors.text.secondary}`}>
+              #
+            </span>
             {pokemon?.id}
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center my-6">
-          <TextBubble title="Typ">
+          <TextBubble title="Typ" titleColor={colors.text.secondary}>
             {pokemon?.types.toLocaleString("de")}
           </TextBubble>
 
-          <TextBubble title="Gewicht">
+          <TextBubble title="Gewicht" titleColor={colors.text.secondary}>
             {pokemon?.weight.toLocaleString("de")} Kg
           </TextBubble>
 
-          <TextBubble title="Größe">
+          <TextBubble title="Größe" titleColor={colors.text.secondary}>
             {pokemon?.height.toLocaleString("de")} m
           </TextBubble>
         </div>
