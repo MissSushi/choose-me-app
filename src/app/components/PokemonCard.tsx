@@ -7,10 +7,10 @@ import { SearchBar } from "./SearchBar";
 import { Button } from "./Button";
 
 function determineColors(pokemonColor: string | undefined) {
-  // if (pokemonColor && pokemonColor in colorMap) {
-  //   // @ts-ignore
-  //   return colorMap[pokemonColor]
-  // }
+  if (pokemonColor && pokemonColor in colorMap) {
+    // @ts-ignore
+    return colorMap[pokemonColor];
+  }
   return {
     text: {
       primary: "text-black",
@@ -25,46 +25,149 @@ function determineColors(pokemonColor: string | undefined) {
   };
 }
 
-// const colorMap = {
-//   black: {
-//     text: {
-//       primary: "text-white",
-//       secondary: "text-neutral-300",
-//       tertiary: "text-stone-500",
-//     },
-//     bg: {
-//       primary: "bg-black",
-//       secondary: "bg-neutral-800",
-//     },
-//   },
-//   blue: {
-//     text: {
-//       primary: "text-white",
-//       secondary: "text-neutral-300",
-//       tertiary: "text-stone-500",
-//     },
-//     bg: {
-//       primary: "bg-black",
-//       secondary: "bg-neutral-800",
-//     },
-//   },
-// };
+const colorMap = {
+  black: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "bg-black",
+    },
+  },
+  blue: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "dark:bg-blue-700 bg-blue-500",
+    },
+  },
+
+  brown: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "bg-amber-900",
+    },
+  },
+  gray: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "bg-gray-600",
+    },
+  },
+  green: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "bg-green-700",
+    },
+  },
+  pink: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "bg-pink-600",
+    },
+  },
+  purple: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "dark:bg-purple-900 bg-purple-950",
+    },
+  },
+  red: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "dark:bg-red-600 bg-red-700",
+    },
+  },
+  white: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "dark:text-black text-black",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-200",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "bg-neutral-50",
+    },
+  },
+  yellow: {
+    text: {
+      primary: "dark:text-white text-black",
+      secondary: "dark:text-stone-400 text-stone-600",
+      tertiary: "text-white",
+    },
+    bg: {
+      primary: "dark:bg-neutral-950 bg-neutral-100",
+      secondary: "dark:bg-neutral-800 bg-stone-200/40",
+      tertiary: "bg-yellow-500",
+    },
+  },
+};
 
 const PokemonCard = () => {
   const { pokemon, setId } = usePokemon();
   const ref = useRef<HTMLAudioElement>(null);
 
   const colors = determineColors(pokemon?.color);
+  console.log(pokemon?.color, colors);
 
   return (
     <>
       <SearchBar
+        className={`${colors.bg.tertiary} ${colors.text.tertiary} ${
+          pokemon?.color !== "white" && "border-current"
+        }`}
         onIdFound={(id) => {
           setId(id);
         }}
       ></SearchBar>
       <div
-        className={`relative rounded shadow-lg max-w-3xl mx-auto mb-20 ${colors.bg.secondary}`}
+        className={`relative rounded shadow-lg max-w-3xl mx-auto mb-20 ${colors.bg.secondary} ${colors.text.primary}`}
       >
         <div
           className={`relative sm:static flex flex-col items-center rounded-t ${colors.bg.primary}`}
@@ -145,12 +248,8 @@ const PokemonCard = () => {
               <audio ref={ref} src={pokemon?.cries}></audio>
             </button>
           </div>
-          <div
-            className={`absolute -right-2 -top-2 rounded-full py-2 px-3 flex items-baseline justify-center  ${colors.bg.tertiary} ${colors.text.tertiary}`}
-          >
-            <span className={`text-xs font-semibold ${colors.text.secondary}`}>
-              #
-            </span>
+          <div className="absolute -right-4 -top-4 rounded-full py-1 px-2 flex items-baseline justify-center bg-stone-200/40 shadow-sm">
+            <span className="text-xs font-semibold text-stone-400">#</span>
             {pokemon?.id}
           </div>
         </div>
@@ -178,7 +277,7 @@ const PokemonCard = () => {
         <div className="max-w-3xl flex mx-auto gap-8">
           {/* Dislike Button */}
           <Button
-            className="bg-stone-200/80"
+            className="bg-stone-200/80 dark:bg-stone-700/80"
             onClick={() => {
               window.location.reload();
             }}
@@ -187,7 +286,7 @@ const PokemonCard = () => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={1}
+              strokeWidth={1.5}
               stroke="currentColor"
               className="size-8"
             >
@@ -201,17 +300,19 @@ const PokemonCard = () => {
 
           {/* Like Button */}
           <Button
-            className="bg-stone-700/80"
+            className={`${colors.bg.tertiary} ${colors.text.tertiary} ${
+              pokemon?.color === "black" && "bg-gray-50"
+            }`}
             onClick={() => {
               window.location.reload();
             }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="red"
+              fill="white"
               viewBox="0 0 24 24"
-              strokeWidth={1}
-              stroke="currentColor"
+              strokeWidth={1.5}
+              stroke="black"
               className="size-8"
             >
               <path

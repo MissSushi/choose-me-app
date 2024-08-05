@@ -1,10 +1,11 @@
 type SearchBarProps = {
   onIdFound: (id: number) => void;
+  className: string;
 };
 
 import pokemonArray from "../../../public/pokemon.json";
 
-const SearchBar = ({ onIdFound }: SearchBarProps) => {
+const SearchBar = ({ onIdFound, className }: SearchBarProps) => {
   return (
     <form
       className="max-w-3xl mx-auto mb-8"
@@ -41,7 +42,7 @@ const SearchBar = ({ onIdFound }: SearchBarProps) => {
       >
         Suche
       </label>
-      <div className="relative">
+      <div className="relative text-gray-900 dark:text-white border border-neutral-300 dark:border-none shadow-sm rounded-lg bg-gray-50 dark:bg-neutral-800 flex items-center">
         <div className="absolute inset-y-0 start-0 flex items-center pl-3 pointer-events-none">
           <svg
             className="w-4 h-4 text-gray-500"
@@ -63,13 +64,13 @@ const SearchBar = ({ onIdFound }: SearchBarProps) => {
           type="search"
           id="default-search"
           name="default-search"
-          className="block w-full p-4 ps-10 text-sm text-gray-900 border border-stone-700 rounded-lg bg-gray-50 focus:ring-stone-700 focus:border-stone-700"
+          className="block w-full p-4 ps-10 text-sm bg-transparent"
           placeholder="Bisasam, 1, Glurak, 6, ..."
           required
         />
         <button
           type="submit"
-          className="text-white absolute end-2.5 bottom-2.5 bg-stone-700 hover:bg-stone-800 focus:ring-4 focus:outline-none focus:ring-stone-700 font-medium rounded-lg text-sm px-4 py-2"
+          className={`${className} flex items-center border focus:ring-4 focus:outline-none focus:ring-neutral-100 font-medium rounded-lg text-sm px-4 py-2 mr-2`}
         >
           Suche
         </button>

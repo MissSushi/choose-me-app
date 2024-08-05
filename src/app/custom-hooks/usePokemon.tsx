@@ -66,7 +66,7 @@ const usePokemon = () => {
         return {
           name: germanNameEntry,
           description: germanDescriptionEntry,
-          color: result.color,
+          color: result.color.name,
         };
       } catch (error) {
         if (error instanceof Error) {
