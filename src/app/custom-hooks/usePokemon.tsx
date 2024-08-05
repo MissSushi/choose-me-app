@@ -10,6 +10,7 @@ type Pokemon = {
   weight: number;
   height: number;
   cries: string;
+  color: string;
 };
 
 function getRandomPokemonId(max: number) {
@@ -29,7 +30,7 @@ const usePokemon = () => {
 
       if (!species || !data) return;
 
-      const { name, description } = species;
+      const { name, description, color } = species;
       const { types, weight, height, cries } = data;
 
       setPokemon({
@@ -41,6 +42,7 @@ const usePokemon = () => {
         height,
         weight,
         cries,
+        color,
       });
     }
 
@@ -64,6 +66,7 @@ const usePokemon = () => {
         return {
           name: germanNameEntry,
           description: germanDescriptionEntry,
+          color: result.color.name,
         };
       } catch (error) {
         if (error instanceof Error) {
