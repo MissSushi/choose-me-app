@@ -11,6 +11,7 @@ type Pokemon = {
   height: number;
   cries: string;
   color: string;
+  pokeballImageSrc: string;
 };
 
 function getRandomPokemonId(max: number) {
@@ -36,6 +37,7 @@ const usePokemon = () => {
       setPokemon({
         id,
         imageSrc: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
+        pokeballImageSrc: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
         name,
         description,
         types,
@@ -133,4 +135,4 @@ const usePokemon = () => {
   return { pokemon, setId };
 };
 
-export { usePokemon };
+export { usePokemon, type Pokemon };

@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
-import { usePokemon } from "../custom-hooks/usePokemon";
+import { useReducer, useRef } from "react";
+import { Pokemon, usePokemon } from "../custom-hooks/usePokemon";
 import { TextBubble } from "./TextBubble";
 import { SearchBar } from "./SearchBar";
 import { Button } from "./Button";
+import { PokeTeam } from "./pokeball/PokeTeam";
 
 function determineColors(pokemonColor: string | undefined) {
   if (pokemonColor && pokemonColor in colorMap) {
@@ -149,12 +150,34 @@ const colorMap = {
   },
 };
 
+type Action =
+  | {
+      type: "addToTeam";
+      pokemon: Pokemon;
+    }
+  | {
+      type: "removeFromTeam";
+      pokemon: Pokemon;
+    };
+
+function reducer(state: Pokemon[], action: Action) {
+  if (action.type === "addToTeam") {
+    if (state.length === 6) return state;
+    return [...state, action.pokemon];
+  }
+  if (action.type === "removeFromTeam") {
+    return state.filter((pokemon) => pokemon.id !== action.pokemon.id);
+  }
+  throw Error("unknown action");
+}
+
 const PokemonCard = () => {
   const { pokemon, setId } = usePokemon();
   const ref = useRef<HTMLAudioElement>(null);
 
+  const [pokemonTeam, dispatch] = useReducer(reducer, []);
+
   const colors = determineColors(pokemon?.color);
-  console.log(pokemon?.color, colors);
 
   return (
     <>
@@ -167,7 +190,7 @@ const PokemonCard = () => {
         }}
       ></SearchBar>
       <div
-        className={`relative rounded shadow-lg max-w-3xl mx-auto mb-20 ${colors.bg.secondary} ${colors.text.primary}`}
+        className={`relative rounded shadow-lg max-w-3xl mx-auto mb-4 ${colors.bg.secondary} ${colors.text.primary}`}
       >
         <div
           className={`relative sm:static flex flex-col items-center rounded-t ${colors.bg.primary}`}
@@ -273,13 +296,20 @@ const PokemonCard = () => {
         </p>
       </div>
 
-      <div className="fixed bottom-2 left-0  w-full ">
+      <div className="grid grid-cols-3 max-w-3xl mx-auto justify-items-center gap-8 my-16">
+        <PokeTeam pokeTeam={pokemonTeam}></PokeTeam>
+      </div>
+
+      <div className="sticky bottom-2 left-0 mt-4 w-full ">
         <div className="max-w-3xl flex mx-auto gap-8">
           {/* Dislike Button */}
           <Button
             className="bg-stone-200/80 dark:bg-stone-700/80"
             onClick={() => {
-              window.location.reload();
+              if (!pokemon) {
+                return;
+              }
+              dispatch({ type: "removeFromTeam", pokemon });
             }}
           >
             <svg
@@ -304,7 +334,10 @@ const PokemonCard = () => {
               pokemon?.color === "black" && "bg-gray-50"
             }`}
             onClick={() => {
-              window.location.reload();
+              if (!pokemon) {
+                return;
+              }
+              dispatch({ type: "addToTeam", pokemon });
             }}
           >
             <svg
