@@ -166,7 +166,10 @@ function reducer(state: Pokemon[], action: Action) {
     return [...state, action.pokemon];
   }
   if (action.type === "removeFromTeam") {
-    return state.filter((pokemon) => pokemon.id !== action.pokemon.id);
+    const index = state.findIndex(
+      (pokemon) => pokemon.id === action.pokemon.id
+    );
+    return state.filter((_, i) => i !== index);
   }
   throw Error("unknown action");
 }
